@@ -28,6 +28,22 @@ internal data class GroupMeGroup(
     val name: String = "",
     @SerialName("image_url") val imageUrl: String? = null,
     @SerialName("updated_at") val updatedAt: Long = 0,
+    @SerialName("children_count") val childrenCount: Int = 0,
+    val messages: GroupMessagesInfo? = null,
+)
+
+/**
+ * GroupMe models a topic as a "subgroup": a child of a parent group carrying a
+ * [topic] title instead of a name. Its messages come from the ordinary
+ * /groups/{id}/messages endpoint, so a topic reads exactly like a group.
+ */
+@Serializable
+internal data class GroupMeTopic(
+    // Unlike groups, subgroups return numeric ids.
+    val id: Long,
+    val topic: String = "",
+    @SerialName("parent_id") val parentId: Long? = null,
+    @SerialName("updated_at") val updatedAt: Long = 0,
     val messages: GroupMessagesInfo? = null,
 )
 

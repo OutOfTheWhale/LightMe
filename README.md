@@ -16,6 +16,7 @@ no badges, no infinite scroll — just your groups, in the LightOS black-and-whi
   <img src="docs/screenshots/login.png" width="200" alt="Login screen">
   <img src="docs/screenshots/groups.png" width="200" alt="Group list">
   <img src="docs/screenshots/chat.png" width="200" alt="Conversation view">
+  <img src="docs/screenshots/topics.png" width="200" alt="Topics within a group">
   <img src="docs/screenshots/compose.png" width="200" alt="Composing a message">
 </p>
 
@@ -30,6 +31,7 @@ conversations here.*
   the top bar, the draft resting just above the native Light Phone keys
 - **Live updates** — new messages arrive over a WebSocket connection while the tool is open,
   no manual refresh required
+- **Topics** inside a group are listed and readable, and you can post into one
 - **Photo attachments** render inline; tap one for a full-screen view
 - **Sign in by QR code** from a computer, or type an access token in by hand
 
@@ -40,7 +42,10 @@ in with their own GroupMe access token, which is:
 
 - entered on the device (scanned or typed), never compiled in
 - checked against `GET /users/me` before it is accepted
-- stored in the tool's private DataStore, which no other app on the phone can read
+- encrypted with an AES-256/GCM key held in the Android Keystore before it is written, so the
+  stored file never contains a usable credential
+- kept in the tool's private storage, which no other app on the phone can read, and carried
+  across app updates so you only sign in once
 - sent only to `api.groupme.com` and `push.groupme.com`, never anywhere else
 
 Logging out erases it from the device.
@@ -103,14 +108,24 @@ dashboard.
 Kotlin, Jetpack Compose, Coroutines, and MVVM throughout, using only the libraries Light's SDK
 allows on a tool's classpath.
 
+## On attachments
+
+Sending a photo is not possible for any Light Phone tool today, and this is a platform limit
+rather than a missing feature here. The SDK gives tools nine system calls — ringtone, keyboard,
+permissions, dialer and similar — and none of them expose the camera roll or a file picker. The
+camera libraries are not on the tool dependency allow-list, and `Intent`, `Context`, and
+`contentResolver` are blocked imports, so there is no way for a tool to reach the gallery. Photos
+that other people send **do** display, and sending will be a small change once Light exposes a
+media primitive.
+
 ## Status
 
-Working: signing in, the group list, reading conversations, paging back through history, and
-the composer.
+Working: signing in, the group list, reading conversations, paging back through history, the
+composer, and topics — listing them and reading their messages.
 
 The realtime connection is confirmed established — the tool holds an open socket to
 `push.groupme.com` and GroupMe accepts the subscription — but an incoming message has not yet
-been observed arriving live. Sending and image attachments are written but not yet exercised.
+been observed arriving live. Sending, including into a topic, is written but not yet exercised.
 Sending a photo additionally needs a media picker primitive the SDK has not exposed.
 
 ## Installing on real hardware

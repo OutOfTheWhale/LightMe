@@ -1,8 +1,8 @@
 [tool]
 id = "com.outofthewhale.groupme"
 label = "GroupMe"
-versionCode = 2
-versionName = "1.1.0"
+versionCode = 3
+versionName = "1.2.0"
 permissions = ["android.permission.INTERNET", "android.permission.CAMERA"]
 capabilities = []
 # change if you run this on an LP3!

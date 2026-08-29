@@ -58,6 +58,7 @@ class HomeScreenViewModel internal constructor(
         super.onScreenShow(screen)
         viewModelScope.launch {
             if (credentials == null) {
+                sessionStore.migrateIfNeeded()
                 credentials = sessionStore.credentials.first()
             }
             val creds = credentials
@@ -337,7 +338,7 @@ class HomeScreen(sealedActivity: SealedLightActivity) :
                 .fillMaxWidth()
                 .lightClickable {
                     navigateTo(
-                        screenFactory = { ChatScreen(it, group.id, group.name) },
+                        screenFactory = { ChatScreen(it, group.id, group.name, group.childrenCount) },
                     )
                 }
                 .padding(horizontal = 1f.gridUnitsAsDp(), vertical = 12.dp)

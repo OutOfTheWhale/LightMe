@@ -131,6 +131,7 @@ class ChatScreen(
     sealedActivity: SealedLightActivity,
     private val groupId: String,
     private val groupName: String,
+    private val topicCount: Int = 0,
 ) : LightScreen<Unit, ChatViewModel>(sealedActivity) {
 
     override val viewModelClass: Class<ChatViewModel>
@@ -165,6 +166,29 @@ class ChatScreen(
                         onClick = { viewModel.refresh() },
                     ),
                 )
+
+                if (topicCount > 0) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .lightClickable {
+                                navigateTo(
+                                    screenFactory = { TopicsScreen(it, groupId, groupName) },
+                                )
+                            }
+                            .padding(horizontal = 1f.gridUnitsAsDp(), vertical = 8.dp),
+                    ) {
+                        LightIcon(
+                            icon = LightIcons.LIST,
+                            modifier = Modifier.padding(end = 12.dp),
+                        )
+                        LightText(
+                            text = if (topicCount == 1) "1 TOPIC" else "$topicCount TOPICS",
+                            variant = LightTextVariant.Detail,
+                        )
+                    }
+                }
 
                 error?.let {
                     LightText(

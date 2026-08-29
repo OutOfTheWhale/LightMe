@@ -43,6 +43,17 @@ internal class GroupMeApi(val token: String) {
         response.body<Envelope<List<GroupMeGroup>>>().response.orEmpty()
     }
 
+    /**
+     * Topics within a group. GroupMe calls these subgroups; each one behaves like a
+     * group for reading and sending, so its id can be passed straight to
+     * [getMessages] and [sendMessage].
+     */
+    suspend fun getTopics(groupId: String): Result<List<GroupMeTopic>> = runCatching {
+        val response = client.get("$API_BASE/groups/$groupId/subgroups") { auth() }
+        response.requireSuccess()
+        response.body<Envelope<List<GroupMeTopic>>>().response.orEmpty()
+    }
+
     /** Newest first. [beforeId] pages backwards through history. */
     suspend fun getMessages(
         groupId: String,
