@@ -216,7 +216,7 @@ class ChatScreen(
                 .lightClickable {
                     navigateTo(
                         screenFactory = {
-                            TextEntryScreen(it, title = groupName, submitLabel = "SEND")
+                            ComposerScreen(it, title = groupName)
                         },
                         resultCallback = { viewModel.send(it) },
                     )

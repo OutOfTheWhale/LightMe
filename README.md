@@ -26,7 +26,8 @@ conversations here.*
 
 - **Your groups**, sorted by most recent activity, each with a one-line preview
 - **Read conversations** with sender names and timestamps, paging back through history
-- **Send messages** using the native Light Phone keyboard
+- **Send messages** on a composer laid out to match the LightOS messaging screen: send in
+  the top bar, the draft resting just above the native Light Phone keys
 - **Live updates** — new messages arrive over a WebSocket connection while the tool is open,
   no manual refresh required
 - **Photo attachments** render inline; tap one for a full-screen view
@@ -104,10 +105,32 @@ allows on a tool's classpath.
 
 ## Status
 
-Working: signing in, the group list, reading conversations, and paging back through history.
+Working: signing in, the group list, reading conversations, paging back through history, and
+the composer.
 
-Built but not yet fully exercised: sending messages, realtime delivery, and image attachments.
-Sending a photo needs a media picker primitive that the SDK has not exposed yet.
+The realtime connection is confirmed established — the tool holds an open socket to
+`push.groupme.com` and GroupMe accepts the subscription — but an incoming message has not yet
+been observed arriving live. Sending and image attachments are written but not yet exercised.
+Sending a photo additionally needs a media picker primitive the SDK has not exposed.
+
+## Installing on real hardware
+
+Two builds are published, and they are not interchangeable:
+
+| Build | For |
+|---|---|
+| `LightMe-x.y.z.apk` | The LightOS emulator |
+| `LightMe-x.y.z-lp3.apk` | A real Light Phone III |
+
+They differ only in `serverPackage` in `lighttool.toml`, which tells the tool whether to talk to
+the emulator or to LightOS itself. Point the wrong one at the wrong target and the tool installs
+but cannot reach system services.
+
+**Note on visibility:** a self-built tool is signed with the development key bundled in the SDK,
+which is *not* Light's signing key. On a real phone, the tool therefore only appears with
+**Allowed Tools** set to **All Tools** — the stricter "Light signed tools" setting correctly
+hides it, and also blocks the tool from reaching LightOS services such as permission requests.
+Tools built and signed by Light through their submission process will not have this limitation.
 
 ## Credits and licensing
 
