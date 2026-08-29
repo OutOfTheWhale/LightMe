@@ -1,4 +1,4 @@
-package com.thelightphone.sample
+package com.outofthewhale.groupme
 
 import android.util.Log
 import com.thelightphone.sdk.EntryPoint
@@ -8,19 +8,17 @@ import kotlinx.coroutines.flow.StateFlow
 
 @EntryPoint
 object ToolEntryPoint : LightEntryPoint {
-    // called when Tool first launches, use to initialize dependencies etc
     override suspend fun onToolCreate(
         serverData: StateFlow<LightServerData?>,
     ) {
         serverData.collect {
-            // this is where you'd send push credentials up to your app server
-            Log.d("ToolEntryPoint", "Current LightOS registration data: $it")
+            Log.d("GroupMeTool", "LightOS registration data: $it")
         }
     }
 
     override suspend fun onPushNotification(
         data: ByteArray,
     ) {
-        Log.d("ToolEntryPoint", "received push notification: $data")
+        Log.d("GroupMeTool", "Received push notification (${data.size} bytes)")
     }
 }
